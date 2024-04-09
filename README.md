@@ -32,7 +32,7 @@ Before all routes, you will find a curl sample.
 
 ## Backlog
 
-Read the different outcomes that are present. They describe the branch to be used for the starting point and the expected result.
+Read the different issues that are present. They describe the branch to be used for the starting point and the expected result.
 
 [Issues](https://github.com/ETML-ES-FWBE/exam-training/issues)
 
