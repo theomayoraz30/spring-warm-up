@@ -1,27 +1,55 @@
 @startuml
-'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+package Controllers {
 
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
+    class EmployeeController {
+        - repository : EmployeeRepository
+        + EmployeeController(repository : EmployeeRepository)
+        + all() : <Employee>
+        + newEmployee(newEmployee : Employee) : Employee
+        + one(id : long) : Employee
+        + replaceEmployee(newEmployee : Employee, id : long) : Employee
+        + deleteEmployee(id : long) : void
+    }
 
-List <|-- AbstractList
-Collection <|-- AbstractCollection
+    class EmployeeNotFoundAdvice {
+        + employeeNotFoundHandler(ex : EmployeeNotFoundException) : string
+    }
 
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
+    class EmployeeNotFoundException {
+        + EmployeeNotFoundException(id : long)
+    }
 }
 
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
+package Entities {
+    class Employee {
+        - id : long
+        - name : string
+        - role : string
+        + Employee()
+        + Employee(name : string , role : string)
+        + getID() : long
+        + setId(id : long) : void
+        + getName() : string
+        + setName(name : string) : void
+        + getRole() : string
+        + setRole(role : string) : void
+        + equals(o : Object) : boolean
+        + hashCode() : int
+        + toString() : string
+    }
 }
+
+package Repositories {
+    interface EmployeeRepository {
+    }
+}
+
+EmployeeController --> EmployeeRepository
+EmployeeController --> Employee
+EmployeeNotFoundAdvice --> EmployeeNotFoundException
+EmployeeNotFoundException --> EmployeeController
+EmployeeRepository ..> JpaRepository : extends
+EmployeeNotFoundException ..> RuntimeException : extends
 
 @enduml
