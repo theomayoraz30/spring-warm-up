@@ -2,6 +2,7 @@ package ch.etmles.payroll.Controllers;
 
 import ch.etmles.payroll.Entities.Employee;
 import ch.etmles.payroll.Repositories.EmployeeRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +66,11 @@ public class EmployeeController {
     curl -i -X DELETE localhost:8080/employees/2
     */
     @DeleteMapping("/employees/{id}")
-    void deleteEmployee(@PathVariable Long id){
+    ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.status(500).body("Could not delete employee (not found) " + id);
+        }
         repository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }
