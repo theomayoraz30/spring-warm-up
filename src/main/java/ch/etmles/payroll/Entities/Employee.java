@@ -1,38 +1,40 @@
 package ch.etmles.payroll.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
 public class Employee {
 
-    private @Id
-    @GeneratedValue Long id;
+    private @Id @GeneratedValue Long id;
     private String firstName;
     private String lastName;
     private String role;
 
-    public Employee(){}
+    @ManyToOne
+    @JoinColumn(name = "department_name")
+    private Department department;
 
-    public Employee(String firstName, String lastName, String role){
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setRole(role);
+    public Employee() {}
+
+    public Employee(String firstName, String lastName, String role, Department department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.department = department;
     }
 
-    public Long getID(){
-        return this.id;
+    public Long getId() {
+        return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -40,7 +42,7 @@ public class Employee {
     }
 
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
@@ -48,31 +50,45 @@ public class Employee {
     }
 
     public String getRole() {
-        return this.role;
+        return role;
     }
 
     public void setRole(String role) {
         this.role = role;
     }
 
-    @Override
-    public boolean equals(Object o){
-        if(this == o)
-            return true;
-        if(!(o instanceof Employee employee))
-            return false;
-        return Objects.equals(this.id, employee.id) && Objects.equals(this.firstName, employee.firstName)
-                && Objects.equals(this.lastName, employee.lastName) && Objects.equals(this.role, employee.role);
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hash(this.id, this.firstName, this.lastName, this.role);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee employee)) return false;
+        return Objects.equals(id, employee.id) &&
+                Objects.equals(firstName, employee.firstName) &&
+                Objects.equals(lastName, employee.lastName) &&
+                Objects.equals(role, employee.role) &&
+                Objects.equals(department, employee.department);
     }
 
     @Override
-    public String toString(){
-        return "Employee{" + "id=" + this.getID() + ", firstName='" + this.getFirstName() + '\'' +
-                ", lastName='" + this.getLastName() + '\'' + ", role='" + this.getRole() + '\'' + '}';
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, role, department);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role='" + role + '\'' +
+                ", department=" + (department != null ? department.getName() : "null") +
+                '}';
     }
 }
