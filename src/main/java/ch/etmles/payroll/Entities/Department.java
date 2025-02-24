@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Department {
@@ -13,6 +14,7 @@ public class Department {
     private String name;
 
     @OneToMany(mappedBy = "department")
+    @JsonIgnore  // Cela va ignorer la sérialisation de la liste des employés dans Department
     private List<Employee> employees;
 
     public Department() {

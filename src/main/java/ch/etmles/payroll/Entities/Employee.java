@@ -1,20 +1,25 @@
 package ch.etmles.payroll.Entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import java.util.Objects;
 
 @Entity
 public class Employee {
-
-    private @Id @GeneratedValue Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
     private String firstName;
     private String lastName;
     private String role;
 
     @ManyToOne
     @JoinColumn(name = "department_name")
+    @JsonIgnore  // Cela va ignorer la sérialisation du département dans Employee
     private Department department;
+
 
     public Employee() {}
 
