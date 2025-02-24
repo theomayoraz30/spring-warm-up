@@ -1,5 +1,6 @@
 package ch.etmles.payroll.Repositories;
 
+import ch.etmles.payroll.Entities.Department;
 import ch.etmles.payroll.Entities.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,23 @@ public class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
     @Bean
-    CommandLineRunner initDatabase(EmployeeRepository repository){
-        return args->{
-            log.info("Preloading " + repository.save(new Employee("Bilbo", "Baggins", "burglar")));
-            log.info("Preloading " + repository.save(new Employee("Frodo" ,"Baggins", "thief")));
+    CommandLineRunner initDatabase(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
+        return args -> {
+            // Création et enregistrement des départements
+            Department itDepartment = new Department("IT");
+            Department financeDepartment = new Department("Finance");
+            departmentRepository.save(itDepartment);
+            departmentRepository.save(financeDepartment);
+
+            log.info("Preloading " + departmentRepository.save(itDepartment));
+            log.info("Preloading " + departmentRepository.save(financeDepartment));
+
+            // Création et enregistrement des employés avec leurs départements respectifs
+            Employee bilbo = new Employee("Bilbo", "Baggins", "Burglar", itDepartment);
+            Employee frodo = new Employee("Frodo", "Baggins", "Thief", financeDepartment);
+
+            log.info("Preloading " + employeeRepository.save(bilbo));
+            log.info("Preloading " + employeeRepository.save(frodo));
         };
     }
 }

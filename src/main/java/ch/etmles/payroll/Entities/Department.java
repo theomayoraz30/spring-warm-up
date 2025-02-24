@@ -2,14 +2,23 @@ package ch.etmles.payroll.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Department {
 
-    private @Id String name;
+    @Id
+    private String name;
 
-    public Department() {}
+    @OneToMany(mappedBy = "department")
+    @JsonIgnore  // Cela va ignorer la sérialisation de la liste des employés dans Department
+    private List<Employee> employees;
+
+    public Department() {
+    }
 
     public Department(String name) {
         this.name = name;
@@ -21,6 +30,14 @@ public class Department {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override
