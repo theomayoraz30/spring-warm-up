@@ -1,5 +1,6 @@
 @startuml
 skinparam classAttributeIconSize 0
+
 package Controllers {
 
     class EmployeeController {
@@ -19,21 +20,44 @@ package Controllers {
     class EmployeeNotFoundException {
         + EmployeeNotFoundException(id : long)
     }
+
+    class DepartmentController {
+        - repository : DepartmentRepository
+        + DepartmentController(repository : DepartmentRepository)
+        + all() : <Department>
+        + newDepartment(newDepartment : Department) : Department
+        + one(name : string) : Department
+        + deleteDepartment(name : string) : void
+    }
 }
 
 package Entities {
     class Employee {
-        - id : long
+        - email : string
         - name : string
         - role : string
+        - department : Department
         + Employee()
-        + Employee(name : string , role : string)
-        + getID() : long
-        + setId(id : long) : void
+        + Employee(email : string, name : string, role : string, department : Department)
+        + getEmail() : string
+        + setEmail(email : string) : void
         + getName() : string
         + setName(name : string) : void
         + getRole() : string
         + setRole(role : string) : void
+        + getDepartment() : Department
+        + setDepartment(department : Department) : void
+        + equals(o : Object) : boolean
+        + hashCode() : int
+        + toString() : string
+    }
+
+    class Department {
+        - name : string
+        + Department()
+        + Department(name : string)
+        + getName() : string
+        + setName(name : string) : void
         + equals(o : Object) : boolean
         + hashCode() : int
         + toString() : string
@@ -43,6 +67,9 @@ package Entities {
 package Repositories {
     interface EmployeeRepository {
     }
+
+    interface DepartmentRepository {
+    }
 }
 
 EmployeeController --> EmployeeRepository
@@ -51,5 +78,12 @@ EmployeeNotFoundAdvice --> EmployeeNotFoundException
 EmployeeNotFoundException --> EmployeeController
 EmployeeRepository ..> JpaRepository : extends
 EmployeeNotFoundException ..> RuntimeException : extends
+
+DepartmentController --> DepartmentRepository
+DepartmentController --> Department
+DepartmentRepository ..> JpaRepository : extends
+
+Employee "1" --> "1" Department
+Department "1" --> "*" Employee
 
 @enduml
