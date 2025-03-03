@@ -6,25 +6,17 @@ package Controllers {
     class EmployeeController {
         - repository : EmployeeRepository
         + EmployeeController(repository : EmployeeRepository)
-        + all() : <Employee>
+        + all() : List<Employee>
         + newEmployee(newEmployee : Employee) : Employee
         + one(id : long) : Employee
-        + replaceEmployee(newEmployee : Employee, id : long) : Employee
+        + updateEmployee(id : long, updates : Map<String, Object>) : Employee
         + deleteEmployee(id : long) : void
-    }
-
-    class EmployeeNotFoundAdvice {
-        + employeeNotFoundHandler(ex : EmployeeNotFoundException) : string
-    }
-
-    class EmployeeNotFoundException {
-        + EmployeeNotFoundException(id : long)
     }
 
     class DepartmentController {
         - repository : DepartmentRepository
         + DepartmentController(repository : DepartmentRepository)
-        + all() : <Department>
+        + all() : List<Department>
         + newDepartment(newDepartment : Department) : Department
         + one(name : string) : Department
         + deleteDepartment(name : string) : void
@@ -33,57 +25,61 @@ package Controllers {
 
 package Entities {
     class Employee {
-        - email : string
-        - name : string
-        - role : string
+        - id : Long
+        - email : String
+        - name : String
+        - role : String
         - department : Department
         + Employee()
-        + Employee(email : string, name : string, role : string, department : Department)
-        + getEmail() : string
-        + setEmail(email : string) : void
-        + getName() : string
-        + setName(name : string) : void
-        + getRole() : string
-        + setRole(role : string) : void
+        + Employee(email : String, name : String, role : String, department : Department)
+        + getId() : Long
+        + getEmail() : String
+        + setEmail(email : String) : void
+        + getName() : String
+        + setName(name : String) : void
+        + getRole() : String
+        + setRole(role : String) : void
         + getDepartment() : Department
         + setDepartment(department : Department) : void
         + equals(o : Object) : boolean
         + hashCode() : int
-        + toString() : string
+        + toString() : String
     }
 
     class Department {
-        - name : string
+        - id : Long
+        - name : String
         + Department()
-        + Department(name : string)
-        + getName() : string
-        + setName(name : string) : void
+        + Department(name : String)
+        + getId() : Long
+        + getName() : String
+        + setName(name : String) : void
         + equals(o : Object) : boolean
         + hashCode() : int
-        + toString() : string
+        + toString() : String
     }
 }
 
 package Repositories {
     interface EmployeeRepository {
+        + findByEmail(email : String) : Optional<Employee>
+        + findByDepartment(department : Department) : List<Employee>
     }
 
     interface DepartmentRepository {
+        + findByName(name : String) : Optional<Department>
     }
 }
 
 EmployeeController --> EmployeeRepository
 EmployeeController --> Employee
-EmployeeNotFoundAdvice --> EmployeeNotFoundException
-EmployeeNotFoundException --> EmployeeController
-EmployeeRepository ..> JpaRepository : extends
-EmployeeNotFoundException ..> RuntimeException : extends
-
 DepartmentController --> DepartmentRepository
 DepartmentController --> Department
+
+EmployeeRepository ..> JpaRepository : extends
 DepartmentRepository ..> JpaRepository : extends
 
-Employee "1" --> "1" Department
+Employee "1" --> "*" Department
 Department "1" --> "*" Employee
 
 @enduml
